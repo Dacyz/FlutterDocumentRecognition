@@ -1,6 +1,4 @@
 import 'dart:io';
-import 'dart:math';
-import 'dart:ui';
 import 'dart:ui' as ui;
 
 import 'package:camera/camera.dart';
@@ -8,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:google_mlkit_object_detection/google_mlkit_object_detection.dart';
 
 import 'coordinates_translator.dart';
-import 'package:image/image.dart' as img;
 class ObjectDetectorPainter extends CustomPainter {
   ObjectDetectorPainter(
     this._objects,
@@ -29,7 +26,7 @@ class ObjectDetectorPainter extends CustomPainter {
       ..strokeWidth = 3.0
       ..color = Colors.lightGreenAccent;
 
-    final Paint background = Paint()..color = Color(0x99000000);
+    final Paint background = Paint()..color = const Color(0x99000000);
     Paint currentPaint = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = 3.0
@@ -42,13 +39,13 @@ class ObjectDetectorPainter extends CustomPainter {
     const augment = 32;
 
     for (final DetectedObject detectedObject in _objects) {
-      final ParagraphBuilder builder = ParagraphBuilder(
-        ParagraphStyle(textAlign: TextAlign.left, fontSize: 16, textDirection: TextDirection.ltr),
+      final ui.ParagraphBuilder builder = ui.ParagraphBuilder(
+        ui.ParagraphStyle(textAlign: TextAlign.left, fontSize: 16, textDirection: TextDirection.ltr),
       );
       builder.pushStyle(ui.TextStyle(color: Colors.lightGreenAccent, background: background));
       if (detectedObject.labels.isNotEmpty) {
         final label = detectedObject.labels.reduce((a, b) => a.confidence > b.confidence ? a : b);
-        builder.addText('${label.text} ${label.confidence} wa\n');
+        builder.addText('${label.text} ${label.confidence}');
       }
       builder.pop();
 
@@ -95,7 +92,7 @@ class ObjectDetectorPainter extends CustomPainter {
 
       canvas.drawParagraph(
         builder.build()
-          ..layout(ParagraphConstraints(
+          ..layout(ui.ParagraphConstraints(
             width: (right - left).abs(),
           )),
         Offset(Platform.isAndroid && cameraLensDirection == CameraLensDirection.front ? right : left, top),
@@ -200,35 +197,3 @@ class ObjectDetectorPainter extends CustomPainter {
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
 }
-
-
-// double calculateSharpness(img.Image image) {
-//   // Convierte la imagen a escala de grises
-//   final grayscaleImage = img.grayscale(image);
-
-//   // Calcula los gradientes horizontales y verticales utilizando el operador Sobel
-//   final horizontalGradient = img.sobel(grayscaleImage,);
-//   final verticalGradient = img.sobel(grayscaleImage,);
-
-//   // Calcula el gradiente total como la suma de los gradientes horizontales y verticales
-//   final totalGradient = img.combinePixels(horizontalGradient, verticalGradient, (a, b) => a + b);
-
-//   // Calcula la desviación estándar de los gradientes como medida de nitidez
-//   final sharpness = _standardDeviation(totalGradient);
-
-//   return sharpness;
-// }
-
-// // Función para calcular la desviación estándar de una matriz de valores
-// double _standardDeviation(List<List<int>> values) {
-//   final mean = _mean(values);
-//   final sumSquaredDiff = values.expand((row) => row).map((value) => (value - mean) * (value - mean)).reduce((a, b) => a + b);
-//   final variance = sumSquaredDiff / (values.length * values[0].length);
-//   return variance != 0 ? sqrt(variance) : 0;
-// }
-
-// // Función para calcular la media de una matriz de valores
-// double _mean(List<List<int>> values) {
-//   final sum = values.expand((row) => row).reduce((a, b) => a + b);
-//   return sum / (values.length * values[0].length);
-// }
