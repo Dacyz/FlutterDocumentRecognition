@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_document_recognition/vision_detector_views/image_classifier_view.dart';
 import 'package:flutter_document_recognition/vision_detector_views/object_detector_view.dart';
+import 'package:identity_document_detection/identity_document_detection.dart';
 
 void main() {
   runApp(const MainApp());
@@ -25,8 +25,8 @@ class SplashPage extends StatelessWidget {
   void toRealTime(BuildContext context) =>
       Navigator.push(context, MaterialPageRoute(builder: (context) => ObjectDetectorView()));
 
-  void toImageCls(BuildContext context) =>
-      Navigator.push(context, MaterialPageRoute(builder: (context) => ImageClassifierView()));
+  void toViewQR(BuildContext context) =>
+      Navigator.push(context, MaterialPageRoute(builder: (context) => IDView()));
 
   @override
   Widget build(BuildContext context) {
@@ -36,11 +36,11 @@ class SplashPage extends StatelessWidget {
       children: [
         ElevatedButton(
           onPressed: () => toRealTime(context),
-          child: const Text('Object detection'),
+          child: const Text('Object Detection'),
         ),
         ElevatedButton(
-          onPressed: () => toImageCls(context),
-          child: const Text('Image classifier'),
+          onPressed: () => toViewQR(context),
+          child: const Text('ID Detection'),
         )
       ],
     ));
